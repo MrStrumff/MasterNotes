@@ -1,0 +1,109 @@
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\i}{\mathrm{i}}
+\newcommand{\U}{\mathbf{U}}
+\newcommand{\M}{\mathscr{M}}
+\newcommand{\defeq}{\overset{\text{def}}=}
+\renewcommand{\O}{\mathbf{O}}
+\newcommand{\F}{\mathbf{F}}
+\renewcommand{\S}{\mathfrak{S}}
+\newcommand{\A}{\mathfrak{A}}
+\newcommand{\GL}{\mathbf{GL}}
+\newcommand{\Id}{\mathrm{Id}}
+\renewcommand{\P}{\mathbb{P}}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\inter}{\mathring}
+
+\let\Re\relax
+\let\Im\relax
+\DeclareMathOperator{\Re}{\mathfrak{Re}}
+\DeclareMathOperator{\Im}{\mathfrak{Im}}
+
+\let\ker\relax
+\DeclareMathOperator{\ker}{Ker}
+\DeclareMathOperator{\im}{Im}
+
+\DeclareMathOperator\rg{rg}
+\DeclareMathOperator\sgn{sgn}
+\DeclareMathOperator\Rg{Rg}
+\DeclareMathOperator\tr{tr}
+\DeclareMathOperator\Tr{Tr}
+\DeclareMathOperator\Hess{Hess}
+\DeclareMathOperator\supp{supp}
+\DeclareMathOperator\Stab{Stab}
+\DeclareMathOperator\Sp{Sp}
+\DeclareMathOperator\Card{Card}
+\DeclareMathOperator\diag{diag}
+\DeclareMathOperator\Mat{Mat}
+\DeclareMathOperator\Det{Det}
+\DeclareMathOperator\Conv{Conv}
+\DeclareMathOperator\Vect{Vect}
+\DeclareMathOperator\dist{dist}
+\DeclareMathOperator\pgcd{pgcd}
+\DeclareMathOperator\ord{ord}
+\DeclareMathOperator*\argmin{arg\;min}
+
+\newcommand{\norme}[1]{\left\lVert #1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1\right\rvert}
+
+\newcommand{\normet}[1]{{\left\vert\kern-0.25ex\left\vert\kern-0.25ex\left\vert #1
+			\right\vert\kern-0.25ex\right\vert\kern-0.25ex\right\vert}}
+
+\newcommand{\ps}[2]{\left\langle #1,\,#2\right\rangle}
+
+\newcommand{\transp}[1]{{}^{\mathsf{t}}{#1}}
+
+\renewcommand{\d}{\mathop{}\mathopen{}\mathrm d}
+\renewcommand{\bar}{\overline}
+\newcommand\restr[1]{\mathclose{}|\mathopen{}_{#1}}
+\renewcommand{\bf}{\mathbf}
+
+\makeatletter
+\renewenvironment{cases}[1][l]{\matrix@check\cases\env@cases{#1}}{\endarray\right.}
+\def\env@cases#1{%
+\let\@ifnextchar\new@ifnextchar
+\left\lbrace\def\arraystretch{1.2}%
+\array{@{}#1@{\quad}l@{}}}
+\makeatother
+
+\newcommand{\cyc}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+\let\originalleft\left
+\let\originalright\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+\renewcommand{\right}{\aftergroup\egroup\originalright}
+
+% Intervalles
+\renewcommand{\intff}[2]{\left[#1\,;#2\right]}
+\renewcommand{\intof}[2]{\left]#1\,;#2\right]}
+\renewcommand{\intfo}[2]{\left[#1\,;#2\right[}
+\renewcommand{\intoo}[2]{\left]#1\,;#2\right[}
+
+\usepackage{stmaryrd}
+
+% Intervalles d'entiers
+\newcommand{\inteff}[2]{\left\llbracket#1\,;#2\right\rrbracket}
+\newcommand{\inteof}[2]{\left\rrbracket#1\,;#2\right\rrbracket}
+\newcommand{\intefo}[2]{\left\llbracket#1\,;#2\right\llbracket}
+\newcommand{\inteoo}[2]{\left\rrbracket#1\,;#2\right\llbracket}
+
+\newcommand{\addfig}[1]{% add a custom TikZ figure (mostly drawn on https://www.mathcha.io or https://www.q.uiver.app)
+	\begin{figure*}[h]
+		\centering
+		\input{figs/#1.tex}
+	\end{figure*}
+}
+
+\renewcommand{\thefootnote}{(\arabic{footnote})} % Using symbols for footnotes
+
+\newcommand{\fonction}[5]{
+	\begin{array}{lccc}
+		#1\colon & #2 & \longrightarrow & #3 \\
+		         & #4 & \longmapsto     & #5
+	\end{array}
+}
+\newcommand{\fct}[4]{
+	\begin{array}{lccc}
+		#1 & \longrightarrow & #2 \\
+		#3 & \longmapsto     & #4
+	\end{array}
+}

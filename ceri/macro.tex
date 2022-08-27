@@ -1,0 +1,219 @@
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\i}{\mathrm{i}}
+\newcommand{\U}{\mathbf{U}}
+\newcommand{\M}{\mathscr{M}}
+\newcommand{\defeq}{\overset{\text{def}}=}
+\renewcommand{\O}{\mathbf{O}}
+\newcommand{\F}{\mathbf{F}}
+\renewcommand{\S}{\mathfrak{S}}
+\newcommand{\A}{\mathfrak{A}}
+\newcommand{\GL}{\mathbf{GL}}
+\newcommand{\Id}{\mathrm{Id}}
+\renewcommand{\P}{\mathbb{P}}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\inter}{\mathring}
+
+\let\Re\relax
+\let\Im\relax
+\DeclareMathOperator{\Re}{\mathfrak{Re}}
+\DeclareMathOperator{\Im}{\mathfrak{Im}}
+
+\let\ker\relax
+\DeclareMathOperator{\ker}{Ker}
+\DeclareMathOperator{\im}{Im}
+
+\DeclareMathOperator\rg{rg}
+\DeclareMathOperator\sgn{sgn}
+\DeclareMathOperator\Rg{Rg}
+\DeclareMathOperator\tr{tr}
+\DeclareMathOperator\Tr{Tr}
+\DeclareMathOperator\Hess{Hess}
+\DeclareMathOperator\supp{supp}
+\DeclareMathOperator\Stab{Stab}
+\DeclareMathOperator\Sp{Sp}
+\DeclareMathOperator\Card{Card}
+\DeclareMathOperator\diag{diag}
+\DeclareMathOperator\Mat{Mat}
+\DeclareMathOperator\Det{Det}
+\DeclareMathOperator\Is{Is}
+\DeclareMathOperator\Conv{Conv}
+\DeclareMathOperator\Vect{Vect}
+\DeclareMathOperator\dist{dist}
+\DeclareMathOperator\pgcd{pgcd}
+\DeclareMathOperator\ord{ord}
+\DeclareMathOperator*\argmin{arg\;min}
+
+\newcommand{\norme}[1]{\left\lVert #1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1\right\rvert}
+
+\newcommand{\normet}[1]{{\left\vert\kern-0.25ex\left\vert\kern-0.25ex\left\vert #1
+            \right\vert\kern-0.25ex\right\vert\kern-0.25ex\right\vert}}
+
+\newcommand{\ps}[2]{\left\langle #1,\,#2\right\rangle}
+
+\newcommand{\transp}[1]{{}^{\mathsf{t}}{#1}}
+
+\renewcommand{\d}{\mathop{}\mathopen{}\mathrm d}
+\renewcommand{\bar}{\overline}
+\newcommand\restr[1]{\mathclose{}|\mathopen{}_{#1}}
+\renewcommand{\bf}{\mathbf}
+
+\makeatletter
+\renewenvironment{cases}[1][l]{\matrix@check\cases\env@cases{#1}}{\endarray\right.}
+\def\env@cases#1{%
+\let\@ifnextchar\new@ifnextchar
+\left\lbrace\def\arraystretch{1.2}%
+\array{@{}#1@{\quad}l@{}}}
+\makeatother
+
+\newcommand{\cyc}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\eng}[1]{\left\langle#1\right\rangle}
+
+\let\originalleft\left
+\let\originalright\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+\renewcommand{\right}{\aftergroup\egroup\originalright}
+
+% Intervalles
+\renewcommand{\intff}[2]{\left[#1\,;#2\right]}
+\renewcommand{\intof}[2]{\left]#1\,;#2\right]}
+\renewcommand{\intfo}[2]{\left[#1\,;#2\right[}
+\renewcommand{\intoo}[2]{\left]#1\,;#2\right[}
+
+\usepackage{stmaryrd}
+
+% Intervalles d'entiers
+\newcommand{\inteff}[2]{\left\llbracket#1\,;#2\right\rrbracket}
+\newcommand{\inteof}[2]{\left\rrbracket#1\,;#2\right\rrbracket}
+\newcommand{\intefo}[2]{\left\llbracket#1\,;#2\right\llbracket}
+\newcommand{\inteoo}[2]{\left\rrbracket#1\,;#2\right\llbracket}
+
+\newcommand{\addfig}[1]{% add a custom TikZ figure (mostly drawn on https://www.mathcha.io or https://www.q.uiver.app)
+    \begin{figure*}[h]
+        \centering
+        \input{figs/#1.tex}
+    \end{figure*}
+}
+
+\renewcommand{\thefootnote}{(\arabic{footnote})} % Using symbols for footnotes
+
+\newcommand{\fonction}[5]{
+    \begin{array}{lccc}
+        #1\colon & #2 & \longrightarrow & #3 \\
+                 & #4 & \longmapsto     & #5
+    \end{array}
+}
+\newcommand{\fct}[4]{
+    \begin{array}{lccc}
+        #1 & \longrightarrow & #2 \\
+        #3 & \longmapsto     & #4
+    \end{array}
+}
+
+\usepackage{csquotes}
+\usepackage[
+    style=alphabetic,
+    backend=biber
+]{biblatex}
+\DeclareFieldFormat{labelalpha}{\mkbibbold{#1}}
+\DeclareFieldFormat{extraalpha}{\mkbibbold{\mknumalph{#1}}}
+\bibliography{../ceri/main_biblio.bib}
+\usepackage{footmisc}
+
+\usepackage{fontawesome}
+\newcommand{\lecon}[2]{% Pour l'environnement <recase>
+    \item[
+                \ifnum#2=1\relax (\faStar\faStarO\faStarO\faStarO\faStarO) \fi
+                \ifnum#2=2\relax (\faStar\faStar\faStarO\faStarO\faStarO) \fi
+                \ifnum#2=3\relax (\faStar\faStar\faStar\faStarO\faStarO) \fi
+                \ifnum#2=4\relax (\faStar\faStar\faStar\faStar\faStarO) \fi
+                \ifnum#2=5\relax (\faStar\faStar\faStar\faStar\faStar) \fi
+                \textbf{Leçon #1.}
+          ]%
+    %
+    \ifnum#1=101\relax Groupe opérant sur un ensemble. Exemples et applications. \fi
+    \ifnum#1=102\relax Groupe des nombres complexes de module $1$. Sous-groupes des racines de l'unité. Applications. \fi
+    \ifnum#1=103\relax Conjugaison dans un groupe. Exemples de sous-groupes distingués et de groupes quotients. Applications. \fi
+    \ifnum#1=104\relax Groupes abéliens et non abéliens finis. Exemples et applications. \fi
+    \ifnum#1=105\relax Groupe des permutations d'un ensemble fini. Applications. \fi
+    \ifnum#1=106\relax Groupe linéaire d'un espace vectoriel de dimension finie $E$, sous-groupes de $\GL(E)$. Applications. \fi
+    \ifnum#1=108\relax Exemples de parties génératrices d'un groupe. Applications. \fi
+    \ifnum#1=120\relax Anneaux $\Z/n\Z$. Applications. \fi
+    \ifnum#1=121\relax Nombres premiers. Applications. \fi
+    \ifnum#1=122\relax Anneaux principaux. Applications. \fi
+    \ifnum#1=123\relax Corps finis. Applications. \fi
+    \ifnum#1=125\relax Extensions de corps. Exemples et applications. \fi
+    \ifnum#1=126\relax Exemples d'équations en arithmétique. \fi
+    \ifnum#1=141\relax Polynômes irréductibles à une indéterminée. Corps de rupture. Exemples et applications. \fi
+    \ifnum#1=142\relax PGCD et PPCM, algorithmes de calcul. Applications. \fi
+    \ifnum#1=144\relax Racines d'un polynôme. Fonctions symétriques élémentaires. Exemples et applications. \fi
+    \ifnum#1=149\relax Valeurs propres, vecteurs propres. Calculs exacts ou approchés d'éléments propres. Applications. \fi
+    \ifnum#1=150\relax Exemples d'actions de groupes sur les espaces de matrices. \fi
+    \ifnum#1=151\relax Dimension d'un espace vectoriel (on se limitera au cas de la dimension finie). Rang. Exemples et applications. \fi
+    \ifnum#1=152\relax Déterminant. Exemples et applications. \fi
+    \ifnum#1=153\relax Polynômes d'endomorphisme en dimension finie. Réduction d'un endomorphisme en dimension finie. Applications. \fi
+    \ifnum#1=154\relax Sous-espaces stables par un endomorphisme ou une famille d'endomorphismes d'un espace vectoriel de dimension finie. Applications. \fi
+    \ifnum#1=155\relax Endomorphismes diagonalisables en dimension finie. \fi
+    \ifnum#1=156\relax Exponentielle de matrices. Applications. \fi
+    \ifnum#1=157\relax Endomorphismes trigonalisables. Endomorphismes nilpotents. \fi
+    \ifnum#1=158\relax Matrices symétriques réelles, matrices hermitiennes. \fi
+    \ifnum#1=159\relax Formes linéaires et dualité en dimension finie. Exemples et applications. \fi
+    \ifnum#1=160\relax Endomorphismes remarquables d'un espace vectoriel euclidien (de dimension finie). \fi
+    \ifnum#1=161\relax Distances et isométries d'un espace affine euclidien. \fi
+    \ifnum#1=162\relax Systèmes d'équations linéaires ; opérations élémentaires, aspects algorithmiques et conséquences théoriques. \fi
+    \ifnum#1=170\relax Formes quadratiques sur un espace vectoriel de dimension finie. Orthogonalité, isotropie. Applications. \fi
+    \ifnum#1=171\relax Formes quadratiques réelles. Coniques. Exemples et applications. \fi
+    \ifnum#1=181\relax Barycentres dans un espace affine réel de dimension finie, convexité. Applications. \fi
+    \ifnum#1=190\relax Méthodes combinatoires, problèmes de dénombrement. \fi
+    \ifnum#1=191\relax Exemples d'utilisation des techniques d'algèbre en géométrie. \fi
+    %
+    \ifnum#1=201\relax Espaces de fonctions. Exemples et applications. \fi
+    \ifnum#1=203\relax Utilisation de la notion de compacité. \fi
+    \ifnum#1=204\relax Connexité. Exemples et applications. \fi
+    \ifnum#1=205\relax Espaces complets. Exemples et applications. \fi
+    \ifnum#1=207\relax Prolongement de fonctions. Exemples et applications. \fi
+    \ifnum#1=208\relax Espaces vectoriels normés, applications linéaires continues. Exemples. \fi
+    \ifnum#1=209\relax Approximation d'une fonction par des fonctions régulières. Exemples et applications. \fi
+    \ifnum#1=213\relax Espaces de \textsc{Hilbert}. Bases hilbertiennes. Exemples et applications. \fi
+    \ifnum#1=214\relax Théorème d'inversion locale, théorème des fonctions implicites. Exemples et applications en analyse et en géométrie. \fi
+    \ifnum#1=215\relax Applications différentiables définies sur un ouvert de $\R^n$. Exemples et applications. \fi
+    \ifnum#1=219\relax Extremums : existence, caractérisation, recherche. Exemples et applications. \fi
+    \ifnum#1=220\relax Équations différentielles ordinaires. Exemples de résolution et d'études de solutions en dimension $1$ et $2$. \fi
+    \ifnum#1=221\relax Équations différentielles linéaires. Systèmes d'équations différentielles linéaires. Exemples et applications. \fi
+    \ifnum#1=222\relax Exemples d'études d'équations différentielles linéaires et d'équations aux dérivées partielles linéaires. \fi
+    \ifnum#1=223\relax Suites numériques. Convergence, valeurs d'adhérence. Exemples et applications. \fi
+    \ifnum#1=226\relax Suites vectorielles et réelles définies par une relation de récurrence $u_{n+1}=f(u_n)$. Exemples. Applications à la résolution approchée d'équations. \fi
+    \ifnum#1=228\relax Continuité, dérivabilité des fonctions réelles d'une variable réelle. Exemples et applications. \fi
+    \ifnum#1=229\relax Fonctions monotones. Fonctions convexes. Exemples et applications. \fi
+    \ifnum#1=230\relax Séries de nombres réels ou complexes. Comportement des restes ou des sommes partielles des séries numériques. Exemples. \fi
+    \ifnum#1=234\relax Fonctions et espaces de fonctions \textsc{Lebesgue}-intégrables. \fi
+    \ifnum#1=235\relax Problèmes d'interversion de limites et d'intégrales. \fi
+    \ifnum#1=236\relax Illustrer par des exemples quelques méthodes de calcul d'intégrales de fonctions d'une ou plusieurs variables. \fi
+    \ifnum#1=239\relax Fonctions définies par une intégrale dépendant d'un paramètre. Exemples et applications. \fi
+    \ifnum#1=241\relax Suites et séries de fonctions. Exemples et contre-exemples. \fi
+    \ifnum#1=243\relax Séries entières, propriétés de la somme. Exemples et applications. \fi
+    \ifnum#1=245\relax Fonctions d'une variable complexe. Exemples et applications. \fi
+    \ifnum#1=246\relax Séries de \textsc{Fourier}. Exemples et applications. \fi
+    \ifnum#1=250\relax Transformation de \textsc{Fourier}. Applications. \fi
+    \ifnum#1=253\relax Utilisation de la notion de convexité en analyse. \fi
+    \ifnum#1=261\relax Loi d'une variable aléatoire : caractérisations, exemples, applications. \fi
+    \ifnum#1=262\relax Convergences d'une suite de variables aléatoires. Théorèmes limite. Exemples et applications. \fi
+    \ifnum#1=264\relax Variables aléatoires discrètes. Exemples et applications. \fi
+    \ifnum#1=265\relax Exemples d'études et d'applications de fonctions usuelles et spéciales. \fi
+    \ifnum#1=266\relax Illustration de la notion d'indépendance en probabilités. \fi
+    \ifnum#1=267\relax Exemples d'utilisation de courbes en dimension 2 ou supérieure. \fi
+}
+
+\newenvironment{recase}{\noindent\textbf{Recasages possibles.}\begin{itemize}[wide]}{\end{itemize}
+    % fg, fg2, th, defini, rema, coro
+    \par\noindent
+    {\color{fg}\rule{.15\textwidth}{1pt}}%
+    {\color{fg2}\rule{.11\textwidth}{1pt}}%
+    {\color{th}\rule{.0833\textwidth}{1pt}}%
+    {\color{defini}\rule{.0666\textwidth}{1pt}}%
+    {\color{rema}\rule{.0555\textwidth}{1pt}}%
+    {\color{coro}\rule{.0555\textwidth}{1pt}}%
+    \\
+}
+
+\usepackage{tkz-tab} % Pour les tableaux de variations
