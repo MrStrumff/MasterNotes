@@ -78,7 +78,7 @@
             \begin{tikzpicture}[remember picture,overlay]
               \node[anchor=north west,inner sep=0pt] at ($(current page.north west)$) {
                  \includegraphics[trim={0 5cm 0 0},
-                 width=\paperwidth]{ceri/images/universe.jpg}
+                 width=\paperwidth]{../ceri/images/Head.png}
               };
             \end{tikzpicture}
 
@@ -549,6 +549,6 @@
 
 % ----------------------
 % FINISH
-\ExecuteOptions{grape} % Default color palette
+% \ExecuteOptions{grape} % Default color palette
 \ProcessOptions\relax
 % ----------------------
