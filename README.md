@@ -8,6 +8,8 @@ All of the main files are in the `ceri/sty` folder.
 - `MasterArticle` for a article-style document.
 - `MasterLessons` for a specific "Leçons pour l'Agrégation" style document (in particular landscaped).
 
+*Note.* Compilation must be with XeLaTeX.
+
 ### Illustrations
 
 To change the picture of the titlepage with the `MasterNotes` class, you have to change the picture in the `ceri/images` folder and in the line 80 of the `MasterNotes.cls` file.
@@ -49,4 +51,4 @@ This project is completely free and open source. In the case of using/modifying 
 
 ## Disclaimer
 
-This class is not supported. I will no longer take time to add some stuff. I'm working on my other project, called [MyCourse]{https://github.com/MrStrumff/MyCourse}. 
+This class is not supported. I will no longer take time to add some stuff. I'm working on my other project, called [MyCourse](https://github.com/MrStrumff/MyCourse). 
