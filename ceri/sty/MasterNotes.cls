@@ -1,6 +1,6 @@
 % ----------------------
 % Classe pour les notes prises au master
-% v1.2 - 12/09/2021
+% v1.2 - 18/11/2020
 %
 % Alexis Pic - inspiré de la classe de Vincent Labatut
 % <https://www.overleaf.com/latex/templates/modele-de-rapport-avignon-universite/pdbgdpzsgwrt>
@@ -78,7 +78,7 @@
             \begin{tikzpicture}[remember picture,overlay]
               \node[anchor=north west,inner sep=0pt] at ($(current page.north west)$) {
                  \includegraphics[trim={0 5cm 0 0},
-                 width=\paperwidth]{../ceri/images/universe.jpg}
+                 width=\paperwidth]{ceri/images/universe.jpg}
               };
             \end{tikzpicture}
 
@@ -550,5 +550,5 @@
 % ----------------------
 % FINISH
 \ExecuteOptions{grape} % Default color palette
-% \ProcessOptions\relax
+\ProcessOptions\relax
 % ----------------------
