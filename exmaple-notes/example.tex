@@ -1,0 +1,577 @@
+\documentclass[grape]{../ceri/sty/MasterNotes}
+
+\title{Optimisation et Éléments Finis}
+\author{Jean Martin}
+\date{\the\year}
+
+\newcommand\J{\mathcal J}
+
+\begin{document}
+
+% Création de la page de titre.
+\maketitle
+
+\mainmatter
+
+%\tableofcontents
+
+\partt{Optimisation}{../ceri/images/part1.jpg}
+
+\chapimage{../ceri/images/Head.png}
+\chapter[Exemples et vocabulaire]{Premiers exemples de problèmes d'optimisation et vocabulaire}
+
+\section{Motivations}
+
+Les problèmes d'optimisation apparaissent dans de nombreux domaines. Un ingénieur qui doit construire un bâtiment se doit de choisir les meilleurs matériaux au meilleur rapport qualité-prix afin d'avoir une structure aussi sûre que possible le moins cher possible. Un courtier doit choisir les bons investissements qui génèreront les meilleures rentes tout en gardant le risque de perte sous contrôle (à son minimum). Un système physique va avoir tendance à se mettre dans un état d'énergie minimale tout en respectant les contraintes physiques qui peuvent lui être données. On pourrait même imaginer un étudiant qui cherche à minimiser le nombre d'heures à passer sur son cours pour avoir une bonne note.
+
+Pour toutes ces situations, on peut trouver des points communs :
+\begin{itemize}[wide]
+    \item Il y a un \textit{but} ou un \textit{objectif} à atteindre pour l'activité concernée (rendre meilleur), via un \textit{coût} à minimiser.
+    \item On cherche à atteindre cet objectif au regard potentiellement de toute une série de \textit{contraintes} ou d'\textit{attendus} qu'il faut atteindre et/ou satisfaire.
+    \item Implicitement, on suppose qu'il y a un ou des choix possibles de paramètres pour satisfaire aux deux items précédents. Ces paramètres sont appelés \textit{variables d'optimisation} ou de \textit{design}. On devra sélectionner les variables importantes d'un problème d'optimisation à considérer. Ainsi, alors que le temps qu'il fait peut influer sur la construction d'un bâtiment (ou les révisions d'un cours), ce n'est pas forcément le cas pour le banquier. Le variable \og temps qu'il fait \fg\ peut donc ou non influencer l'objectif.
+\end{itemize}
+
+En résumé : la formulation d'un problème d'optimisation implique de définir et comprendre correctement le problème posé et de savoir le formaliser en une série de problèmes mathématiques pour espérer le résoudre. Plus précisément, la formalisation d'un problème d'optimisation va mettre en jeu :
+\begin{itemize}[wide]
+    \item le choix d'une ou plusieurs \textbf{variables d'optimisation} vivant dans un espace général à déterminer ;
+    \item définir une \textbf{fonction objectif} (ou \textbf{fonction coût}) ;
+    \item le cas échéant, identifier l'ensemble des \textbf{contraintes}.
+\end{itemize}
+
+Dans la suite, donnons quelques exemples de tels problèmes.
+
+\section{Premiers exemples simples}
+
+\subsection{Révision des examens}
+
+Un étudiant doit réviser pour ses examens. Il a 4 UE à passer et a une semaine pour réviser, ce qui lui donne 42 heures de travail (6 jours et 7 heures de travail par jour). Les variables d'optimisation sont le nombre d'heures de travail par matière (il y en a donc 4) : pour $i\in\{1,\ldots,4\}$, on note $x_i$ le nombre d'heures de révision pour la matière numéro $i$. L'étudiant fait face à des contraintes : la somme des heures travaillées doit être au plus égale à 42 et il doit passer un nombre d'heures positive sur chaque UE.
+
+L'ensemble des contraintes peut ainsi se formaliser à l'aide d'un ensemble $K$ :
+\[ K = \left\{ (x_1,x_2,x_3,x_4)\in\R^4\mid \forall i\in\{1,\ldots,4\},\ x_i\ge 0,\ \sum_{i=1}^4x_i\le 42 \right\}. \]
+
+Pour $x\in\R^4$, on note $M(x)$ la moyenne des notes (sur 20) obtenues par l'étudiant après avoir révisé $x_i$ heures sur la matière $i$. L'objectif est de maximiser $M$ ou encore de minimiser $20-M$.
+
+Le problème d'optimisation peut donc s'écrire :
+\begin{center}
+    Trouver $x^*\in K$ tel que $M(x^*)=\displaystyle\inf_{x\in K}(20-M(x))$.
+\end{center}
+
+\subsection{Consommation des ménages}
+
+On considère un ménage qui peut consommer $n$ types de marchandises ($n\in\N^*$) dont les prix forment un vecteur $p\in\R_+^n$. Son revenu à dépenser est un réel $b>0$, et ses choix de consommation sont supposés être modélisés par une fonction d'utilité $u$ de $\R_+^n$ dans $\R$ (croissante et concave), qui mesure le bénéfice que le ménage tire de la consommation de la quantité $x\in\R^n$ des $n$ marchandises. La consommation du ménage sera le vecteur $x^*$ qui réalisera le maximum
+\[ \max_{\substack{x\in\R_+^n\\\ps xp\le b}}u(x), \]
+où $\ps xp=\displaystyle\sum_{i=1}^nx_ip_i$ (ici $\ps..$ représente le produit scalaire canonique de $\R^n$). Autrement dit, c'est le vecteur qui maximise l'utilité sous une contrainte de budget maximal.
+
+\subsection{Problème du toboggan}
+
+On se donne deux points $A$ et $B$ (avec le point $A$ plus haut que le point $B$ qui est au sol), et on se demande quelle serait la forme d'un toboggan qui permettrait d'atteindre le point $B$ en partant du point $A$, le plus rapidement possible. Mathématiquement, on cherche donc à déterminer une courbe du plan reliant $A$ et $B$, telle qu'un point matériel de poids donné (donc sous l'action de la gravité) glissant le long de cette courbe partant de $A$ arrive en $B$ en un temps minimal. Le toboggan est donc représenté par le graphe d'une fonction $f\colon\intff 01\to\R$ avec $f(0)=h>0$ (hauteur du toboggan donnée) et $f(1)=0$. On prend donc $A=(0,h)$ et $B=(1,0)$.
+
+En écrivant la conservation de l'énergie, on trouve que, pour une fonction $f$ donnée, le temps de descente $T(f)$ du toboggan est donné par la formule
+\[ T(f) = \int_0^1\frac{\sqrt{1+f'(x)^2}}{2g(h-f(x))}\d x, \]
+avec $g$ la constante de gravitation.
+
+Le problème revient donc à minimiser $T$ avec $f$ dans un certain espace de fonctions $\mathcal F$ :
+\[ \min_{f\in\mathcal F}T(f). \]
+
+\subsection{Identification de paramètres}
+
+On se donne un signal $f\colon\R\to\R$ dont on sait qu'il dépend de 3 paramètres $(a,b,c)\in\R^3$ et qui a la forme
+\[ f(t) = a\cos(bt +c). \]
+
+Pour identifier ces paramètres, on ne dispose que d'un nombre fini $m\in\N^*$ de mesures $(t_i,y_i)_{i\in\{1,\ldots,m\}}$. On choisit alors de minimiser une fonctionnelle $\J$ représentant une certaine distance aux mesures :
+\[ \J(a,b,c) = \sum_{i=1}^m(y_i-f(t_i))^2. \]
+C'est ce qui s'appelle \textbf{calibrer les paramètres}.
+
+\section{Mise en forme mathématique générale et éléments de vocabulaire}
+
+\subsection{Forme générale d'un problème d'optimisation}
+
+Tous les exemples ci-dessus rentrent dans un cadre assez général sous lequel on peut écrire un problème d'optimisation. On notera :
+\begin{itemize}[wide]
+    \item $V$ l'espace dans lequel le problème est posé et où vont vivre les variables d'optimisation (c'est-à-dire où seront à chercher les variables d'optimisation). On cherchera $V$ comme un espace vectoriel normé d'une norme que l'on notera $\norme.$ ;
+    \item on se donne aussi $K$ qui définira l'ensemble des contraintes qui s'appliqueront sur le système ;
+    \item enfin, on se donne $\J\colon K\subset V\to\R$ le critère à minimiser que l'on appellera \textbf{fonction objectif}, \textbf{fonction coût} ou \textbf{fonctionnelle}.
+\end{itemize}
+
+Tout ceci sont des \textit{données du problème}. Ensuite, on peut toujours se ramener à un problème de minimisation. En effet, si le problème consiste à maximiser une certaine fonction coût $\J$, alors étudier le problème de maximisation de $\J$ revient à étudier le problème de minimisation de $-\J$.
+
+\textit{Ainsi, dans la suite, on ne considèrera que des problèmes de minimisation pour développer les stratégies de résolution numérique.}
+
+Un problème d'optimisation $\mathrm{Opt}$ peut alors se mettre sous la forme générale très simple suivante : on cherche à savoir s'il existe un $u^*\in K$ qui réalise le minimum de $\J$ sur $K$, $\displaystyle\min_{u\in K}\J(u)$. Cela peut encor s'écrire :
+\begin{center}
+    Trouver $u^*\in K$ tel que $\J(u^*)=\displaystyle\inf_{u\in K}\J(u)$.
+\end{center}
+L'\textbf{inconnue du problème} est donc $u^*$ à chercher dans l'ensemble $K$.
+
+Il se pose alors plusieurs questions mathématiques qui se traduisent sur le problème concret de départ :
+\begin{itemize}
+    \item Parle-t-on de \textit{minimum} ou d'\textit{infimum} ?
+    \item Y a-t-il existence d'au moins une solution $u^*$ à ce problème ?
+    \item Si une solution existe, est-elle unique ?
+    \item A-t-on une caractérisation du ou des minima, s'ils existent ?
+    \item Peut-on trouver cette (ces) solution(s) minimale(s) quand elle(s) existe(nt) ?
+    \item Est-on capable de donner l'expression de cette solution ?
+\end{itemize}
+
+Suivant les cas, la réponse est plus ou moins simple, affirmative ou négative, voire inconnue. Pour les exemples précédents, on peut identifier les données $V$, $K$ et $\J$.
+
+\subsection{Définitions et éléments de vocabulaire}
+
+Soit $\J\colon K\subset V\to\R$ ; on s'intéresse au problème de minimisation associé à $\J$. On distingue les minima locaux des minima globaux.
+
+\begin{defin}
+    On dit que $u\in K$ est un \textbf{point de minimum local} de $\J$ sur $K$ si
+    \[ \exists \delta>0,\ \forall v\in K,\ \norme{v-u}<\delta\implies\J(v)\ge\J(u). \]
+    On dit alors que la valeur $\J(u)$ est un \textbf{minimum local} de $\J$ sur $K$.
+\end{defin}
+
+\begin{defin}
+    On dit que $u\in K$ est un \textbf{point de minimum global} de $\J$ sur $K$ si
+    \[ \forall v\in K,\ \J(v)\ge\J(u). \]
+    On dit alors que la valeur $\J(u)$ est un \textbf{minimum global} de $\J$ sur $K$.
+\end{defin}
+
+\begin{defin}
+    On appelle \textbf{infimum} de $\J$ sur $K$, et on note $\displaystyle\inf_{u\in K}\J(u)$ :
+    \begin{itemize}[wide]
+        \item si $\J$ est minorée sur $K$, c'est la borne supérieure dans $\R$ des minorants de $\J$ sur $K$;
+        \item si $\J$ n'est pas minorée sur $K$, c'est $-\infty$ ;
+        \item si $K$ est vide, alors c'est $+\infty$ par convention.
+    \end{itemize}
+\end{defin}
+
+\begin{defin}
+    On appelle \textbf{suite minimisante} de $\J$ dans $K$ une suite d'éléments de $K$ telle que
+    \[ \lim_{n\to+\infty}\J(u_n) = \inf_{v\in K}\J(v). \]
+\end{defin}
+
+Par définition même de l'infimum, \textit{une suite minimisante existe toujours}. En effet, commençons par le cas où $\J$ est minorée, et donc $\displaystyle\inf_{v\in K}\J(v)$ est un réel donné. Soit $n\in\N^*$. Par définition de l'infimum, $\displaystyle\inf_{v\in K}\J(u)+\frac 1n$ n'est plus un minorant de $\J$ sur $K$ (puisque $\displaystyle\inf_{v\in K}\J(u)+\frac 1n>\inf_{v\in K}\J(u)$ et que $\displaystyle\inf_{v\in K}\J(u)$ est la borne supérieure des minorants de $\J$ sur $K$). Donc il existe $u_n\in K$ tel que $\J(u_n)<\displaystyle\inf_{v\in K}\J(u)+\frac 1n$. On a donc pour tout $n\in\N$,
+\[ \inf_{v\in K}\J(u)\le \J(u_n)<\inf_{v\in K}\J(u)+\frac 1n. \]
+On en déduit le résultat par encadrement en passant à la limite lorsque $n\to+\infty$ : la suite $(u_n)_{n\in\N^*}$ est bien une suite minimisante.
+
+Si $\J$ n'est pas minorée, alors $\displaystyle\inf_{v\in K}\J(u)=-\infty$. On sait que pour tout $m\in\R$, il existe $v\in K$ tel que $\J(v)<m$. Soit alors $n\in\N$. En appliquant ce qui précède à $m=-n$, on en déduit qu'il existe un point $v_n\in K$ tel que $\J(v_n)<-n$. En passant à la limite sur $n$, on a donc bien le résultat voulu : la suite $(v_n)_{n\in\N}$ est bien une suite minimisante.
+
+\subsubsection{L'espace $K$ et type de contraintes}
+
+Si $K=V$, on parlera de \textbf{problème d'optimisation sans contrainte} (ou \textbf{problème d'optimisation libre}). Sinon, on parlera de \textbf{problème d'optimisation avec contraintes}. Très souvent, l'espace $K$ sera donné par une série d'équations ou d'inéquations de la forme suivante :
+\begin{itemize}
+    \item Soient $p\in\N^*$ et $h_i\colon V\to\R$ des fonctions données ($1\le i\le p$). Dans le cas de
+          \[ K = \{u\in V\mid \forall i\in\{1,\ldots,p\},\ h_i(u)=0\}, \]
+          on parlera de \textbf{problème d'optimisation avec contraintes d'égalité}. Il y a alors $p$ contraintes données par les fonctions $h_i$ ($1\le i\le p$).
+    \item Soient $q\in\N^*$ et $g_j\colon V\to\R$ des fonctions données ($1\le j\le q$). Dans le cas de
+          \[ K = \{u\in V\mid \forall j\in\{1,\ldots,q\},\ g_j(u)\le 0\}, \]
+          on parlera de \textbf{problème d'optimisation avec contraintes d'inégalité}. Il y a alors $q$ contraintes données par les fonctions $g_i$ ($1\le i\le q$).
+    \item Soient $p\in\N^*$, $q\in\N^*$, $h_i\colon V\to\R$ et $g_j\colon V\to\R$ des fonctions données ($1\le i\le p$ et $1\le j\le q$). Dans le cas de
+          \[ K = \{u\in V\mid \forall i\in\{1,\ldots,p\},\ \forall j\in\{1,\ldots,q\},\ h_i(u)=0,\ g_j(u)\le 0\}, \]
+          on parlera de \textbf{problème mixte}.
+\end{itemize}
+Si $V$ est un espace de dimension finie, on parlera de \textbf{problème d'optimisation en dimension finie}.
+
+\subsection{Cas particulier où $V=\R^d$}
+
+On se place dans le cadre qui sera le cadre majoritaire du cours : c'est le cas où $V=\R^d$ pour $d\in\N$. On notera alors $\ps..$ le produit scalaire euclidien de $\R^d$, c'est-à-dire, pour tout $(u,v)\in\R^d\times\R^d$, $\ps uv = \displaystyle\sum_{i=1}^d u_iv_i$, en notant $u=(u_i)_{1\le i\le d}$ et $v=(v_i)_{1\le i\le d}$.
+
+\subsubsection{Caractéristiques de $\J$}
+
+\begin{defin}
+    Soit $d\in\N^*$. On dit que $\J\colon\R^d\to\R$ est une \textbf{fonctionnelle quadratique} s'il existe $\mi A\in\mathcal M_d(\R)$, $b\in\R^d$ et $c\in\R$ tels que, pour tout $x\in\R^d$, on a
+    \[ \J(x) = \frac 12\ps{Ax}{x} - \ps bx + c. \]
+\end{defin}
+
+\begin{rem*}
+    On peut tout aussi bien écrire
+    \[ \J(x) = \frac 12\ps{Ax}{x} + \ps bx + c \]
+    avec $b\in\R^d$ (on choisit $-b$ à la place de $b$ dans la définition).
+\end{rem*}
+
+Ici, on fait donc une distinction entre \textit{fonctionnelle} et \textit{forme} quadratique. La différence entre les deux se situe dans le terme linéaire $\ps bx$ que l'on ajoute à la forme quadratique.
+
+\begin{defin}
+    Soit $d\in\N^*$. On dit que $\J\colon\R^d\to\R$ est une \textbf{forme quadratique} s'il existe $\mi A\in\mathcal M_d(\R)$, telle que, pour tout $x\in\R^d$, on a
+    \[ \J(x) = \frac 12\ps{Ax}{x}. \]
+\end{defin}
+
+\subsubsection{Les divers types de problèmes d'optimisation}
+
+Donnons dans ce cas précis où $V=\R^d$ les divers types de problèmes d'optimisation que l'on va distinguer suivant la nature des contraintes.
+\begin{itemize}%[wide]
+    \item \textbf{Problèmes sans contrainte :}
+          \begin{itemize}%[wide]
+              \item problèmes linéaires si $\J$ est \textit{affine}\footnote{Une fonction affine s'écrit $\J(x)=a+f(x)$ où $f\colon\R^d\to\R$ est une application linéaire et $a\in\R$.} ;
+              \item problèmes quadratiques si $\J$ est quadratique ;
+              \item problèmes non linéaires sinon.
+          \end{itemize}
+    \item \textbf{Problèmes avec contraintes linéaires (les $h_i$ et $g_i$ affines) :}
+          \begin{itemize}%[wide]
+              \item problèmes avec contraintes d'égalité :
+                    \begin{itemize}%[wide]
+                        \item problèmes linéaires si $\J$ est \textit{affine} ;
+                        \item problèmes linéaires quadratiques si $\J$ est quadratique ;
+                        \item problèmes non linéaires sinon ;
+                    \end{itemize}
+              \item problèmes avec contraintes d'inégalités et mixtes :
+                    \begin{itemize}%[wide]
+                        \item programmation linéaire si $\J$ est \textit{affine} ;
+                        \item problèmes linéaires quadratiques si $\J$ est quadratique ;
+                        \item problèmes non linéaires avec contraintes linéaires sinon.
+                    \end{itemize}
+          \end{itemize}
+    \item \textbf{Problèmes de programmation non linéaire.}
+\end{itemize}
+
+Cette classification peut varier légèrement suivant les personnes, et on peut donner une classification analogue dans des cas plus généraux que ceux de ce cours.
+
+\vspace{\linewidth}
+
+Dans la première partie de ce cours, on étudiera en détails le cas où $V=\R^d$ ($d\in\N^*$). C'est ce qu'on appelle de l'\textbf{optimisation en dimension finie}.*
+
+\section{Questions d'existence et d'unicité en dimension finie ($V=\R^d$)}
+
+On se place dans le cadre d'un problème d'optimisation en dimension finie, et on se demande si l'on sait dire si on a existence et unicité d'un point de minimum (on dit aussi \textbf{minimiseur}). On va voir qie les réponses à ces questions dépendent grandement du problème considéré, ce qui est après tout normal. On commence par donner des exemples assez simples de situations où la réponse à ces questions n'est pas oui.
+
+\subsection{Quelques exemples et contre-exemples simples en dimension $1$}
+
+Soient $a$ et $b$ deux réels tels que $a<b$. On se place alors sur $V=\intff ab\subset\R$.
+
+\begin{itemize}[wide]
+    \item On peut tracer une fonction $\J$ continue n'ayant pas de minimum ni de maximum sur $\R$, par exemple une droite affine sur $\R$. Par contre, elle possède bien un minimum et un maximum sur tout intervalle borné $\intff ab$ aux extrémités de celui-ci.
+
+          Ce qu'on voit avec cet exemple très simple, c'est que \textit{les espaces choisis comptent énormément}. Il y a en effet un gros rôle joué par la topologie suivant si l'espace ouvert, fermé, compact, etc.
+    \item Essayons d'imaginer une fonction qui admet un minimum global, mais que ce minimum n'est pas unique au sens où il y plusieurs points où le minimum global est atteint. On peut par exemple penser à la fonction sinus sur $\R$. Il y a une seule valeur de minimum, mais les points de minimum sont localisés en les points de la forme $-\dfrac\pi 2+2k\pi$ pour $k\in\Z$.
+
+          Ainsi, on peut avoir \textit{existence du point de minimum global, sans avoir d'unicité}.
+    \item On peut avoir le cas d'un infimum non atteint, par exemple avec la fonction $x\mapsto\dfrac 1x$ sur $\intfo 1{+\infty}$.
+    \item Enfin, on peut avoir une infinité de points de minima locaux, mais aucun global.
+\end{itemize}
+
+En bref, les situations peuvent être très variées et compliquées.
+
+\subsection{Résultat d'existence}
+
+Dans certains cas particuliers, on est capable de répondre à la question de l'existence.
+
+\subsubsection{Sur un espace métrique compact}
+
+On a notamment le théorème suivant si on minimise sur un compact une fonction continue. Ce résultat est connu depuis un moment.
+
+\begin{theo}\label{th:1.4.1}
+    Toute fonction continue sur un espace métrique compact est bornée et atteint ses bornes.
+\end{theo}
+
+Ainsi, lorsqu'on cherche à minimiser une fonction continue sur un compact, on sait répondre affirmativement à la questio nde l'existence. Dans ce cas là, on sait que l'infimum (ou le supremum) est atteint et que c'est un minimum (maximum) ; on peut donc trouver au moins un point de minimum (maximum). Autrement dit, si $K$ est compact, et $\J\colon K\to\R$ continue, alors $\J$ est bornée et atteint ses bornes. Il existe donc $u^*$ et $u_*$ deux éléments de $K$ tels que $\J(u^*)=\displaystyle\sup_{u\in K}\J(u)=\max_{u\in K}\J(u)$ et $\J(u_*)=\displaystyle\inf_{u\in K}\J(u)=\min_{u\in K}\J(u)$.
+
+\subsection{Sur un espace non compact}
+
+On cherche ici à avoir un résultat un peu plus général lorsque l'on n'est pas sur un compact.
+
+\begin{theo}\label{th:1.4.2}
+    Soit $K$ un ensemble fermé et non vide de $\R^d$ ($d\in\N^*$) et $\J\colon K\to\R$ une fonction continue vérifiant la propriété dite \og infinie à l'infini\footnote{On dit alors aussi que $\J$ est \textbf{infinie à l'infini}.}\fg\ :
+    \[ \forall (u_n)\in K^\N,\ \lim_{n\to+\infty}\norme{u_n}=+\infty\implies\lim_{n\to+\infty}\J(u_n) = +\infty. \]
+    Alors il existe au moins un point de minimum de $\J$ sur $K$. De plus, on peut extraire de toute suite minimisante de $\J$ sur $K$ une sous-suite convergeant vers un point de minimum sur $K$.
+\end{theo}
+
+\begin{demo}
+    Soit $(u_n)_{n\in\N}$ une suite minimisant de $\J$ sur $K$ (on a montré dans la section I.3.2 qu'une telle suite existe). Par définition de cette suite minimisante, on sait que $(\J(u_n))_{n\to+\infty}$ est une suite convergente, et donc $(\J(u_n))_{n\in\N}$ est une suite bornée.
+
+    Comme $\J$ est \og infinie à l'infini\fg, on en déduit que $(u_n)_{n\in\N}$ est bornée. Montrons cela par l'absurde. Supposons donc que $(u_n)_{n\in\N}$ n'est pas bornée. Alors\footnote{On écrit la négation de \og $(u_n)_{n\in\N}$ est bornée \fg\ : il existe $M>0$ tel que pour tout $n\in\N$, $\norme{u_n}\le M$.}
+    \begin{equation}
+        \forall M\ge 0,\ \exists n(M)\in\N,\ \norme{u_{n(M)}}> M.\label{eq:1.2}
+    \end{equation}
+    Soit $p\in\N$. En appliquant \eqref{eq:1.2} à $M=p$, on en déduit qu'il existe $n(p)\in\N$ tel que $\norme{u_{n(p)}}>p$. Posons alors, pour tout $p\in\N$, $v_p=u_{n(p)}$. On a alors, pour tout $p\in\N$, $\norme{v_p}\ge p$ et donc $\norme{v_p}\to +\infty$ lorsque $p\to+\infty$. Comme $\J$ est infinie à l'infini, on sait que $\J(v_p)\to+\infty$ lorsque $p\to+\infty$. Mais on sait aussi que $(\J(u_n))_{n\in\N}$ est une suite bornée (cf. le début de la preuve), donc il exsite $m>0$ tel que pour tout $n\in\N$, $|\J(u_n)|\le m$. Donc en particulier, pour tout $p\in\N$, $|\J(u_{n(p)})|\le m$. Autrement dit, $(\J(u_{n(p)}))_{p\in\N}$ est bornée, ce qui en contradiction avec le fait que $\J(v_p)\to+\infty$.
+
+    On a bien montré que $(u_n)_{n\in\N}$ est une suite bornée. Par le théorème de Bolzano-Weieirstrass, on sait donc que l'on peut extraire de $(u_n)_{n\in\N}$ une sous-suite qui converge dans $\R^d$ vers un point $u^*\in\R^d$. Mais comme $K$ est fermé, on en déduit que $u^*\in K$.
+
+    Enfin, par définition de $(u_n)_{n\in\N}$ (c'est une suite minimisante), on sait donc, en utilisant le fait que $\J$ soit continue, que
+    \begin{equation*}
+        \J(u^*)=\inf_{u\in K}\J(u).
+    \end{equation*}
+    Le point $u^*$ est donc un point de minimum de $\J$ sur $K$.
+\end{demo}
+
+On peut donner quelques exemples de fonctions qui sont \og infinies à l'infini\fg.
+
+\begin{exs}
+    \item $\J\colon x\in\R^d\mapsto\norme x^2$ est une fonction infinie à l'infini.
+    \item Soit $K=\{(x,y)\in\R^2\mid x+y\le 4\}\subset\R^2$, et $f\colon (x,y)\in K\mapsto x^4+y^4-x^2\in\R$. On peut montrer que $f$ est infinie à l'infini. On a, pour $x\in\R$, $(x^2-1)^2\ge 0$, donc
+    \begin{equation}
+        x^4 \ge 2x^2-1.\label{eq:1.4}
+    \end{equation}
+    On en déduit que, pour tout $y\in\R$, $x^4+y^4-x^2\ge x^2 + y^4-1$. On peut alors écrire, en appliquant l'inégalité \eqref{eq:1.4} à $y$ cette fois,
+    \[ x^4+y^4-x^2\ge x^2+2y^2-2. \]
+    Donc pour tout $x\in\R^2$, $f(x)\ge \norme x^2-2$. On a donc bien $f$ infinie à l'infini.
+\end{exs}
+
+\begin{rem*}
+    \textbf{Attention.} Ce théorème n'est plus valable en dimension infinie, puisque les fermés bornés ne sont plus forcément compacts. On fait alors appel à l'analyse Hilbertienne (notions de convergence faible, semi-continuité de $\J$ pour pouvoir conclure), mais ceci est hors en dehors du programme de ce cours.
+\end{rem*}
+
+Pour ce qui est du problème de l'unicité et du caractère global ou local du minimum, on peut avoir plein de situations différentes. La \textit{convexité} est une notion qui aide pour les problèmes d'unicité des minimisateurs, mais aussi sur le caractère global ou local du minimiseur. C'est l'objet de la section suivante.
+
+\section{Existence et unicité dans le cas convexe}
+
+\subsection{Définitions, rappels}
+
+\begin{defin}
+    On dit qu'un ensemble $C$ est \textbf{convexe} si
+    \[ \forall (u,v)\in C\times C,\ \forall t\in\intff 01,\ tu+(1-t)v\in C. \]
+\end{defin}
+
+\begin{defin}
+    Soit $E$ un $\R$-espace vectoriel, et soit $K\subset E$ un ensemble convexe. Soit $\J\colon K\to\R$.
+
+    On dit que $\J$ est une \textbf{fonction convexe} si elle vérifie :
+    \[ \forall (x,y)\in K\times K,\ \forall t\in\intff 01,\ \J(tx+(1-t)y)\le t\J(x) + (1-t)\J(y). \]
+    On dit que $\J$ est une \textbf{fonction strcitement convexe} si elle vérifie :
+    \[ \forall (x,y)\in K\times K,\ \forall t\in\intff 01,\ x\ne y\text{ et } \J(tx+(1-t)y)< t\J(x) + (1-t)\J(y). \]
+    Soit $\alpha\in\R$. Si $E$ est normé, on dit que $\J$ est une \textbf{fonction $\alpha$-convexe} si elle vérifie :
+    \[ \forall (x,y)\in K\times K,\ \forall t\in\intff 01,\ \J(tx+(1-t)y)\le t\J(x) + (1-t)\J(y) - \frac\alpha 2 t(1-t)\norme{x-y}^2. \]
+\end{defin}
+
+On parle alors de problème d'\textbf{optimisation convexe} si $\J$ est une fonction convexe et $K$ est convexe.
+
+On peut faire quelques remarques importantes :
+\begin{itemize}[wide]
+    \item si $\J$ est une fonction strictement convexe, alors $\J$ est une fonction convexe ;
+    \item si $\J$ est une fonction $\alpha$-convexe avec $\alpha>0$, alors $\J$ est une fonction strictement convexe ;
+    \item si $\J$ est une fonction $\alpha$-convexe avec $\alpha\in R_+$, alors $\J$ est convexe.
+\end{itemize}
+Les réciproques sont cependant fausses. De plus,
+\begin{itemize}
+    \item une fonction $0$-convexe est une fonction convexe ;
+    \item une somme de fonctions convexes est une fonction convexe ;
+    \item la composition de fonctions convexes n'est \textit{pas forcément convexe}. Par contre, si $f$ est une fonction convexe et $g$ est une application linéaire, alors $f\circ g$ est convexe.
+\end{itemize}
+
+On rappelle également le résultat suivant valable en dimension finie qui dit que toute fonction convexe sur un ouvert convexe inclus dans $\R^d$ ($d\in\N^*$) est continue.
+
+\begin{theo}\label{th:1.5.3}
+    Soit $U$ un ouvert convexe de $\R^d$ ($d\in\N^*$), et $\J\colon U\to\R$ une fonction convexe sur $U$. Alors $\J$ est continue sur $U$.
+\end{theo}
+
+\subsection{Existence d'un minimiseur}\label{1.5.2}
+
+\begin{propo}\label{prp:1.5.4}
+    Soit $\J\colon\R^d\to\R$ ($d\in\N^*$) une fonction $\alpha$-convexe avec $\alpha>0$. Alors $\J$ admet au moins un point de minimum sur $\R^d$.
+\end{propo}
+
+\begin{demo}
+    En appliquant l'inégalité de la définition d'$\alpha$-convexité, avec $u=0_{\R^d}$, on obtient, pour tout $y\in\R^d$ et tout $\delta\in\intff 01$,
+    \[ \J(\delta y)\le (1-\delta)\J(0_{\R^d}) + \delta\J(y) - \frac{\alpha}{2} \delta(1-\delta)\norme y^2, \]
+    ce qui se réécrit
+    \[ \forall y\in\R^d,\ \forall\delta\in\intof 01,\ \J(y)\ge\J(0_{\R^d}) + \frac{1}{\delta}\left( \J(\delta y) - \J(0_{\R^d}) \right) + \frac{\alpha}{2} (1-\delta)\norme y^2. \]
+    On peut alors appliquer cette inégalité aux $y\in\R^d$ tels que $\norme{y}\ge 2$, avec $\delta=\dfrac 1{\norme y}$, et on obtient
+    \begin{equation}
+        \J(y)\ge \J(0_{\R^d}) + \left[ \J\left( \frac y{\norme y} \right) - \J(0_{\R^d}) \right]\norme y + \frac\alpha 2\left( 1 - \frac 1{\norme y} \right)\norme y^2\ge\J(0_{\R^d})+k\norme y + \frac\alpha 4\norme y^2,\label{eq:1.5}
+    \end{equation}
+    où $k$ est un minorant de $u\mapsto\J(u)-\J(0_{\R^d})$ sur la sphère unité ($k$ existe car la sphère unité est compacte et $\J$ est continue sur $\R^d$, cf. th. \ref{th:1.4.1}) et où on a utilisé que $\left( 1-\dfrac 1{\norme y} \right)\ge \dfrac12$.
+
+    On déduit alors de \eqref{eq:1.5} est infinie à l'infini. Donc en appliquant le théorème \ref{th:1.4.2} (on a bien les hypothèses avec $K=\R^d$), le problème d'optimisation associé à cette fonction $\J$ admet au moins une solution.
+\end{demo}
+
+Dans cette démonstration, on a au passage montré la proposition suivante :
+
+\begin{propo}
+    Si $\J\colon\R^d\to\R$ ($d\in\N^*$) est une fonction $\alpha$-convexe avec $\alpha>0$, alors $\J$ est infinie à l'infini.
+\end{propo}
+
+\subsection{Unicité et caractère local ou global du minimum}
+
+\begin{theo}\label{th:1.5.5}
+    Soit $K\subset\R^d$ ($d\in\N^*$) un ensemble convexe, et $\J\colon K\to\R$ une fonction convexe. On a alors :
+    \begin{subth}
+        \item\label{th:1.5.5i} tout mininimum local de $\J$ sur $K$ est un minimum global de $\J$ sur $K$ ;
+        \item\label{th:1.5.5ii} si $\J$ est strictement convexe, alors le problème a au plus une solution.
+    \end{subth}
+\end{theo}
+
+\begin{demo}
+    Montrons \ref{th:1.5.5i}. Soit $u^*$ un point de minimum local de $\J$ sur $K$. Si $K=\{u^*\}$, alors \ref{th:1.5.5i} est vérifiée (il n'y a qu'une seule valeur de $\J$ sur $K$, à savoir $\J(u^*)$). Supposons alors que $K\ne\{u^*\}$. Soit $v\in K\backslash\{u^*\}$ un élément quelconque de $K$ différent de $u^*$. On a, comme $K$ est convexe, pour tout $t\in\intff 01$,
+    \[ tu^* + (1-t)v\in K. \]
+    Comme $u^*$ est un point de minimum local de $\J$, on sait qu'il existe $\delta>0$ tel que si $w\in K$ et $\norme{w-u^*}\le\delta$, alors $\J(u^*)\le\J(w)$.
+
+    Choisissons alors $t^*\in\intff 01$ tel que $1>t^*>\max\left(0, 1-\frac{\delta}{\norme{u^*-v}}\right)$ (c'est possible puisque $\norme{u^*-v}\ne 0$ et $\max\left(0, 1-\frac{\delta}{\norme{u^*-v}}\right)<1$), et posons $w^*=t^*u^* + (1-t^*)v$. On a $t^*\in\intff 01$ et donc $w^*\in K$. De plus
+    \[ \norme{w^*-u^*}=(1-t^*)\norme{u^*-v}\le\frac{\delta}{\norme{u^*-v}}\norme{u^*-v}=\delta, \]
+    puisque par définition de $t^*$, on a $1-t^*<\min\left( 1,\frac{\delta}{\norme{u^*-v}} \right)$. Donc $\J(w^*)\ge\J(u^*)$. Or, puisque $\J$ est convexe,
+    \[ \J(w^*)\le t^*\J(u^*) + (1-t^*)\J(v). \]
+    En combinant les deux dernière inégalités, on trouve
+    \[ \J(u^*)\le\J(w^*)\le t^*\J(u^*) + (1-t^*)\J(v). \]
+    Et donc les deux inégalités extrêmes donnent
+    \[ (1-t^*)\J(u^*)\le (1-t^*)\J(v). \]
+    Finalement, puisque $t^*<1$, on a montré que
+    \[ \forall v\in K,\ \J(v)\le\J(u^*). \]
+    Cela signifie sonc que $u^*$ est bien un point de minimum global.
+
+    Montrons \ref{th:1.5.5ii} par l'absurde. Supposons donc qu'il existe deux points de minimum global dans $K$, notés $u_1\in K$ et $u_2\in K$ distincts. Alors dans ce cas, puisque pour tout $t\in\intoo 01$, on a $tu_1+(1-t)u_2\in K$, on en déduit par stricte convexité de $\J$ et définition de $u_1$ que
+    \[ \J(u_1)\le\J(tu_1 + (1-t)u_2) < t\J(u_1) + (1-t)\J(u_2). \]
+    En combinant les deux inégalités extrêmes, on trouve
+    \[ (1-t)\J(u_1) < (1-t)\J(u_2). \]
+    Donc $\J(u_1)<\J(u_2)$ (car $t<1$). On a donc une contradiction avec la définition de $u_2$.
+\end{demo}
+
+\section{Quelques rappels de calcul différentiel}
+
+Pour pouvoir répondre à une des questions que l'ont s'est posées au départ : \og Peut-on avoir une caractérisation du point de minmum s'il existe ?\fg, on a besoin de notions de calcul différentiel. On aura des conditions à vérifier sur les différentielles première (gradient) et seconde (Hessienne) de la fonction que l'on cherche à minimiser. On verra ces conditions dans le chapitre suivant. Dans cette section, on fait les rappels nécessaires pour pouvoir établir les résultats de caractérisation.
+
+\subsection{Cas de la dimension $1$}
+
+On dispose des formules de Taylor.
+
+\begin{propo}[Formule de Taylor-Lagrange]
+    Soient $a$ et $b$ deux réels tels que $a<b$. Soit $f\colon\intff ab\to\R$ une application de classe $\mathcal C^n$ ($n\in\N^*$) donnée telle que $f^{(n+1)}$ existe sur $\intoo ab$. Alors il existe $c\in\intoo ab$ tel que
+    \[ f(b) = f(a) + (b-a)f'(a) + \cdots + \frac{(b-a)^n}{n!}f^{(n)}(a) + \frac{(b-a)^{n+1}}{(n+1)!}f^{(n+1)}(c). \]
+\end{propo}
+
+\begin{propo}[Formule de Taylor-Young]
+    Soient $a$ et $b$ deux réels tels que $a<b$. Soit $f\colon\intff ab\to\R$ une application de classe $\mathcal C^n$ ($n\in\N^*$) donnée. Alors, lorsque $h\to 0$, on a
+    \[ f(a+h) = f(a) + hf'(a) + \cdots + \frac{h^n}{n!}f^{(n)}(a) + o(h^n). \]
+\end{propo}
+
+\subsection{Rappels de résultats classiques en dimension supérieure}
+
+On peut généraliser tout ce qu'on vient de dire à la dimension supérieure, c'est-à-dire pour $d\in\N^*$. On notera $\ps..$ le produit scalaire euclidien sur $\R^d$. Ici, on manipule des \textit{matrices} et des \textit{vecteurs}, donc il faut être prudent. De plus, la visualisation en dimension $1$ est relativement aisée (on peut la plupart du temps tracer le graphe d'une fonction), alors que cela devient beaucoup plus difficile et moins intuitif en dimension supérieure.
+
+\subsubsection{Rappel de la notion de différentiabilité et des formules de Taylor à l'ordre $2$}
+
+On rappelle que l'on a une notion de \textit{différentiabilité} d'une fonction de $U\subset\R^d$ dans $\R$ ($d\in\N^*$) avec $U$ un ouvert de $\R^d$.
+
+\begin{defin}
+    Soit $U$ un ouvert de $\R^d$ et $a\in U$. Une application $F\colon U\to\R$ est dite \textbf{différentiable en $a$} s'il existe une application linéaire et continue de $\R^d$ dans $\R$ $L$ telle que, lorsque $h\to 0$ (dans $\R^d$),
+    \[ F(a+h) = F(a) + L(h) + o(\norme h). \]
+    Si $L$ existe, on l'appelle la \textbf{différentielle de $F$ en $a$} et on la note $DF(a)$.
+\end{defin}
+
+Si $F$ est différentiable en tout point de $U$, on dit alors que $F$ est \textbf{différentiable sur $U$} et l'application $DF\colon U\to\mathcal L_c(\R^d,\R)$ est appelée l'\textbf{application différentielle de $F$}. Si $DF$ est continue, on dit que $F$ est \textbf{de classe $\mathcal C^1$} (et ainsi de suite pour $\mathcal C^p$ pour $p\in\N$).
+
+\subsubsection{Gradient et Hessienne}
+
+Soit $U$ un ouvert de $\R^d$, $a\in U$ et $F\colon U\to\R$ une application différentiable en $a$. On a aussi une notion de \textit{dérivée partielle} qui est une dérivée directionnelle par rapport à chaque direction canonique $\dfrac\partial{\partial x_i}$ ($1\le i\le d$) (qu'on ne rapellera pas dans ce cours), et on a
+\[ \forall h\in\R^d,\ DF(a)(h) = \sum_{i=1}^d\frac{\partial F}{\partial x_i}(a)h_i. \]
+
+Une fonction $F\colon U\to\R$ est \textbf{de classe $\mathcal C^p$} ($p\in\N$) si toutes ses dérivées partielles jusqu'à l'ordre $p$ existent et sont continues sur $U$.
+
+Soit $a\in\R^d$. On appelle \textbf{gradient de $F$ en $a$}, qu'on note $\nabla F(a)$, le vecteur de $\R^d$ dont les coordonnées dans la base canonique de $\R^d$ sont données par les dérivées partielles, c'est-à-dire :
+\[ \nabla F(a) = \begin{pmatrix}
+        \frac{\partial F}{\partial x_1}(a) \\
+        \vdots                             \\
+        \frac{\partial F}{\partial x_d}(a)
+    \end{pmatrix}. \]
+En particulier, on a, pour tout $h\in\R^d$,
+\[ DF(a)(h) = \ps{\nabla F(a)}{h} = {}^t\nabla F(a)h. \]
+
+Si $F$ est de classe $\mathcal C^2$ en $a\in U$, on peut définir la différentielle seconde de $F$ en $a$, $D^2F(a)$. Dans ce cas, la matrice $\mi A =\displaystyle\left( \frac{\partial^2 F}{\partial x_i\partial x_j}(a) \right)_{\substack{1\le i\le d\\ 1\le j\le d}}\in\mathcal M_d(\R)$ est appelée la \textbf{matrice Hessienne} de $F$ en $a$, qu'on pourra noter $H_a(F)$. On remarque que puisque
+\[ \forall (i,j)\in\{1,\ldots,d\}^2,\ \frac{\partial^2 F}{\partial x_i\partial x_j}(a) = \frac{\partial^2 F}{\partial x_j\partial x_i}(a) \]
+(par le théorème de Schwarz), la matrice est symétrique.
+
+De plus, pour tout $(h,\ell)\in\R^d\times\R^d$, on a
+\[ D^2F(a)(h,\ell) = \sum_{i,j=1}^d\left( H_a(F) \right)_{ij}h_i\ell_j = \ps{H_a(F)h}{\ell}. \]
+
+Ici aussi, on dispose des formules de Taylor.
+
+\begin{propo}
+    Soit $d\in\N^*$, $U$ un ouvert de $\R^d$ et $F\colon U\to\R$ une application de classe $\mathcal C^2$. Soit $u\in\R^d$ et $h\in\R^d$ tels que $\{u+th:t\in\intff01\}\subset U$. Alors on a les formules suivantes.
+    \begin{itemize}
+        \item \textnormal{\textbf{Formule de Taylor-Lagrange à l'ordre $2$.}} Il existe $\theta\in\intoo 01$ tel que
+              \[ F(u+h) = F(u) + DF(u)(h) + \frac 12 D^2F(u)(h,h). \]
+        \item \textnormal{\textbf{Formule de Taylor avec reste intégral.}} On a
+              \[ F(u+h) = F(u) + DF(u)(h) + \int_0^1(1-t)D^2F(u)(U+th)(h,h)\d t. \]
+        \item \textnormal{\textbf{Formule de Taylor-Young.}} Lorsque $h\to 0$
+              \[ F(u+h) = F(u) + DF(u)(h) + \frac 12 D^2F(u)(h,h) + o(\norme h^2). \]
+    \end{itemize}
+\end{propo}
+
+\subsection{Le cas convexe}\label{1.6}
+
+En utilisant les notions de calcul différentiel, on a accès à des résultats pratiques pour voir si une fonction convexe, strictement convexe ou $\alpha$-convexe.
+
+\begin{propo}\label{prp:1.6.6}
+    Soit $d\in\N^*$. Soit $\J\colon\R^d\to\R$ une application de classe $\mathcal C^1$ et $\alpha\ge 0$. Alors les trois assertions suivantes sont équivalentes :
+    \begin{subth}
+        \item\label{prp:1.6.6i} $\J$ est une fonctionnelle $\alpha$-convexe ;
+        \item\label{prp:1.6.6ii} pour tout $(u,v)\in\R^d\times\R^d$,
+        \[ \J(v)\ge\J(u) + \ps{\nabla\J(u)}{v-u} + \frac\alpha 2\norme{v-u}^2\,; \]
+        \item\label{prp:1.6.6iii} pour tout $(u,v)\in\R^d\times\R^d$,
+        \[ \ps{\nabla\J(v)-\nabla\J(u)}{u-v}\ge\alpha\norme{v-u}^2. \]
+    \end{subth}
+\end{propo}
+
+\begin{demo}
+    \textbf{$\ref{prp:1.6.6i}\implies\ref{prp:1.6.6ii}$.} Soit $(u,v)\in\R^d\times\R^d$. On a, pour tout $t\in\intff 01$,
+    \begin{equation}
+        \J((1-t)u + tv)\le (1-t)\J(u) + t\J(v) - \frac\alpha 2t(1-t)\norme{u-v}^2.\label{eq:1.7}
+    \end{equation}
+    Mais de pus, en utilisant la formule de Taylor-Young, lorsque $t\to 0$, on a
+    \begin{equation}
+        \J((1-t)u+tv) = \J(u + t(u-v)) = \J(u) + \underbrace{t D\J(u)(v-u)}_{=\ps{\nabla\J(u)}{v-u}} + \norme{u-v}o(t).\label{eq:1.8}
+    \end{equation}
+    En rassemblant \eqref{eq:1.7} et \eqref{eq:1.8}, on trouve
+    \[ tD\J(u)(v-u) + \norme{u-b}o(t)\le t\left( \J(v) - \J(u) \right) - \frac\alpha 2 t(1-t)\norme{u-v}^2. \]
+    En choisissant $t\in\intoo 01$, on peut donc écrire, lorsque $t\to 0^+$,
+    \[ \J(v)\ge\J(u) + D\J(u)(v-u) + \frac\alpha 2(1-t)\norme{u-v}^2 + \norme{u-v}o(1). \]
+    En faisant tendre $t\to 0^+$, on obtient donc
+    \[ \J(v)\ge\J(u) + D\J(u)(v-u) + \frac\alpha 2\norme{u-v}^2. \]
+
+    \textbf{$\ref{prp:1.6.6ii}\implies\ref{prp:1.6.6iii}$.} On échange le rôle de $u$ et $v$ dans \ref{prp:1.6.6ii}, et on trouve une inégalité (ii)'. On additionne ces deux inégalités \ref{prp:1.6.6ii} et (ii)', et on obtient le résultat.
+
+    \textbf{$\ref{prp:1.6.6iii}\implies\ref{prp:1.6.6i}$.} Soit $\varphi\colon t\mapsto\J(u + t(v-u))$. Vu les hypothèses sur $\J$, $\varphi$ est continue, et même $\mathcal C^1$ sur $\R$, et pour tous $t\in\R$ et $(u,v)\in\R^d\times\R^d$,
+    \[ \varphi'(t) = D\J(u+t(v-u))(v-u). \]
+    On a ici utilisé la différentiation de fonctions composées. De plus, par \ref{prp:1.6.6iii} appliqué à $u+t(v-u)$ et $u+s(v-u)$, on a, pour tout $(t,s)\in\R\times\R$,
+    \[ \varphi'(t) - \varphi'(s)\ge\alpha(t-s)\norme{v-u}^2 \]
+    si $t>s$. Soit alors $\theta\in\intoo 01$, en intégrant sur $(t,s)\in\intff \theta 1\times\intfo 0\theta$, on obtient
+    \[ \int_0^\theta\int_\theta^1\varphi'(t)\d t\d s - \int_\theta^1\int_0^\theta\varphi'(s)\d s\d t\ge \alpha\left( \int_0^\theta\int_\theta^1 t\d t\d s - \int_0^\theta\int_\theta^1 s\d t\d s \right)\norme{v-u}^2, \]
+    ce qui donne
+    \[ \theta\int_\theta^1\varphi'(t)\d t - (1-\theta)\int_0^\theta\varphi'(s)\d s\ge\frac\alpha 2\theta(1-\theta)\norme{v-u}^2. \]
+    Autrement dit,
+    \[ \theta\varphi(1) + (1-\theta)\varphi(0) - \varphi(\theta)\ge\frac\alpha 2\theta (1-\theta)\norme{v-u}^2. \]
+    En remplaçant par l'expression de $\varphi$ en fonction de $\J$, on trouve exactement l'expression de l'$\alpha$-convexité.
+\end{demo}
+
+\begin{rem}\label{rem:1.6.6}
+    Ce théorème peut être généralisé au cas où $\J$ est une fonction définie sur un ouvert $\Omega\subset\R^d$ et $\mathcal C^1$. Dans ce cas là, dans les énoncés des assertions, on remplace le \og pour tout $(u,v)\in\R^d\times\R^d$\fg\ par \og pour tout $(u,v)\in U\times U$\fg, avec $U\subset\Omega$ un ensemble convexe, et on dit que $\J$ est alors $\alpha$-convexe sur $U$.
+\end{rem}
+
+\begin{propo}
+    Soit $d\in\N^*$ et $\J\colon\R^d\to\R$ de classe $\mathcal C^2$, et $\alpha\ge 0$. Alors $\J$ est $\alpha$-convexe si et seulement si
+    \[ \forall (u,v)\in\R^d\times\R^d,\ D^2\J(u)(w,w)\ge\alpha\norme w^2. \]
+\end{propo}
+
+\begin{demo}
+    Supposons $\J$ $\alpha$-convexe. Soient $(u,v)\in\R^d\times\R^d$. Alors $\varphi\colon t\mapsto\J(u+t(v-u))$ est de classe $\mathcal C^2$ et on a $\varphi'(t)=D\J(u+t(v-u))(v-u)=\ps{\nabla\J(u+t(v-u))}{v-u}$ et $\varphi''(t) = D^2\J(u+t(v-u))(v-u,v-u) = \ps{H_{u+t(v-u)}(\J)(v-u)}{v-u}$. On dispose des équivalences de proposition précédente. On peut aussi reprendre la preuve de $\ref{prp:1.6.6iii}\implies\ref{prp:1.6.6i}$ et utiliser le fait que pour tout $(s,t)\in\R\times\R$, si $t>s$,
+    \[ \varphi'(t) - \varphi'(s)\ge \alpha(t-s)\norme{v-u}^2. \]
+    Choisissons $s\in\R$ et $h\in\R_+^*$ et $t=s+h$ ; on a alors
+    \[ \varphi'(s+h) - \varphi'(s)\ge \alpha h\norme{v-u}^2. \]
+    Et donc comme $\varphi$ est de classe $\mathcal C^2$ sur $\R$, on en déduit, en divisant par $h>0$ et en faisant tendre $h$ vers $0^+$, que
+    \[ \varphi''(t)\ge\alpha\norme{v-w}^2. \]
+    On a donc, pour tout $(u,v)\in\R^d\times\R^d$,
+    \[ D^2\J(u+t(v-u))(v-u,v-u)\ge \alpha\norme{v-w}^2. \]
+    Soit alors $(w,v)\in\R^d\times\R^d$. On choisit $v=w+u$ dans l'inégalité précédente, et on obtient
+    \[ D^2\J(u+tw)(w,w)\ge\alpha\norme{w}^2. \]
+    En prenant $t=0$, on obtient le résultat voulu.
+
+    Supposons maintenant que
+    \[ \forall (u,v)\in\R^d\times\R^d,\ D^2\J(u)(w,w)\ge\alpha\norme w^2. \]
+    Soit $(u,v)\in\R^d\times\R^d$ et $t\in\R$. En appliquant cette inégélité avec $u+t(v-u)$ et $v-u$, on obtient
+    \[ D^2\J(u+t(v-u))(v-u,v-u)\ge \alpha\norme{v-w}^2 \]
+    et comme précédemment, on déduit donc que
+    \[ \varphi''(t)\ge\alpha\norme{u-v}^2. \]
+    En intégrant entre $0$ et $1$, on trouve donc que
+    \[ \varphi'(1) - \varphi'(0)\ge\alpha\norme{v-w}^2 \]
+    et donc
+    \[ \left( D\J(v) - D\J(u) \right)(v-u)\ge\alpha\norme{v-u}^2, \]
+    ce qui veut dire que $\J$ est $\alpha$-convexe par le point \ref{prp:1.6.6iii} de la proposition \ref{prp:1.6.6}.
+\end{demo}
+
+\begin{rems}
+    \item On retrouve bien le fait connu que si la Hessienne est positive, alors $\J$ est convexe (c'est le cas $\alpha=0$ du théorème).
+    \item Ce théorème peut être généralisé au cas où $\J$ est une fonction définie sur un ouvert $\Omega\subset\R^d$ et de classe $\mathcal C^2$. Dans ce cas-là, on remplace la conclusion par
+    \[ \forall (u,v)\in U\times U,\ D^2\J(u)(w,w)\ge\alpha\norme w^2, \]
+    avec $U\subset\Omega$ un ensemble convexe. On dit alors que $\J$ est $\alpha$-convexe sur $U$.
+\end{rems}
+
+\subsubsection{Conséquences sur le théorème d'existence}
+
+On peut aussi montrer la proposition suivante, que l'on admettra.
+
+\begin{propo}
+    Soit $\Omega$ un ouvert de $\R^d$ ($d\in\N^*$) et $U\subset\Omega$ un ensemble convexe non borné. Soit alors $\J\colon\Omega\to\R$ une fonction $\alpha$-convexe (avec $\alpha>0$) sur $U$ et de classe $\mathcal C^1$ sur $\Omega$. Alors $\J$ est infinie à l'infini sur $U$.
+\end{propo}
+\end{document}

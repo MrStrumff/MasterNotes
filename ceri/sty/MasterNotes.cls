@@ -2,7 +2,7 @@
 % Classe pour les notes prises au master
 % v1.2 - 12/09/2021
 %
-% Alexis Pic - inspiré de la classe de Vincent Labatut 
+% Alexis Pic - inspiré de la classe de Vincent Labatut
 % <https://www.overleaf.com/latex/templates/modele-de-rapport-avignon-universite/pdbgdpzsgwrt>
 % et couverture de LaTeXDraw.com <https://latexdraw.com/stylish-latex-cover-page/#tab-con-3> (toujours dans le code mais inutilisée depuis la version 1.1)
 %
@@ -50,7 +50,7 @@
             {\node[fg!95,rounded corners,draw,regular polygon,regular polygon sides=6, minimum size=\i cm,ultra thick] at ($(current page.south east)+(-0.2,-0.45)$) {} ;}
             % Title of the Report
             \node[left,fg!5,minimum width=0.625*\paperwidth,minimum height=3cm, rounded corners] at ($(current page.north east)+(0,-9.5)$){{\fontsize{25}{30} \selectfont \bfseries \@title}};
-            % Subtitle 
+            % Subtitle
             \node[left,fg!10,minimum width=0.625*\paperwidth,minimum height=2cm, rounded corners] at ($(current page.north east)+(0,-11)$){{\huge \textit{}}};%\@author}}};
             % Author Name
             \node[left,fg!5,minimum width=0.625*\paperwidth,minimum height=2cm, rounded corners] at ($(current page.north east)+(0,-13)$){{\Large \textit{\@author}}};
@@ -77,8 +77,8 @@
             \pagecolor{fg}
             \begin{tikzpicture}[remember picture,overlay]
               \node[anchor=north west,inner sep=0pt] at ($(current page.north west)$) {
-                 \includegraphics[trim={0 5cm 0 0}, 
-                 width=\paperwidth]{ceri/images/universe.jpg}
+                 \includegraphics[trim={0 5cm 0 0},
+                 width=\paperwidth]{../ceri/images/universe.jpg}
               };
             \end{tikzpicture}
 
@@ -125,22 +125,22 @@
 \RequirePackage{mathtools}
 \RequirePackage[notext,not1]{stix2}
 
-\setsansfont{WtKnoll-Text}[                       % set up custom font
+\setsansfont{Roboto}[                       % set up custom font
     Extension = .ttf,
-    Path = ceri/fonts/WtKnoll/,
-    UprightFont = *-Medium,
+    Path = ../ceri/fonts/Roboto/,
+    UprightFont = *-Regular,
     BoldFont = *-Bold,
-    ItalicFont = *-Medium-Italic,
-    BoldItalicFont = *-Bold-Italic
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
 ]
 \renewcommand{\familydefault}{\sfdefault}   % use the sans-serif font
 % ----------------------
 
 % ----------------------
 % INIT PAPER
-\RequirePackage[top=2.5cm, 
-    bottom=2.5cm, 
-    left=2.5cm, 
+\RequirePackage[top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
     right=2.5cm]{geometry}
 
 \RequirePackage[french]{varioref}           % improves cross-refs
@@ -148,7 +148,7 @@
 
 % ----------------------
 % INIT MATH
-\makeatletter                   
+\makeatletter
 \count@=`A \advance\count@\m@ne
 \@whilenum\count@<`Z\do{%
   \advance\count@\@ne
@@ -157,7 +157,7 @@
     {\endgroup\DeclareMathSymbol{a}}
     {\mathalpha}
     {operators}
-    {\count@} 
+    {\count@}
 }
 \RequirePackage{pstricks-add}
 \makeatother % Makes Capital letters in Roman as default in formulas
@@ -179,7 +179,7 @@
 % ----------------------
 % FOOTNOTES AND ITEMIZING
 \RequirePackage{enumitem}
-    
+
 \AddThinSpaceBeforeFootnotes
 \FrenchFootnotes
 \RequirePackage{footnotebackref} % For cluckable footnotes
@@ -218,7 +218,7 @@
 \newcommand{\globalcolor}[1]{%
   \color{#1}\global\let\default@color\current@color
 }
-\makeatother 
+\makeatother
 
 \globalcolor{fgText} % Changes text color
 
@@ -259,7 +259,7 @@
     \pagestyle{empty}
     \begin{tikzpicture}[remember picture,overlay]
     \node[anchor=north west,inner sep=0pt] at ($(current page.north west)$) {
-                 \includegraphics[%trim={0 5cm 0 0}, 
+                 \includegraphics[%trim={0 5cm 0 0},
                  height=\paperheight]{#2}
               };
     \end{tikzpicture}
@@ -276,7 +276,7 @@
     \setHeaders
 
 }
-    
+
 \titleformat{\chapter}
   {\bfseries\printcurrentpicture\color{fg2}\normalfont\Huge\bfseries\scshape}
   {}
@@ -318,10 +318,10 @@
     {}
 
 \renewcommand{\thechapter}{\Roman{chapter}}
-\setcounter{secnumdepth}{4} 
+\setcounter{secnumdepth}{4}
 \renewcommand{\theequation}{\arabic{equation}}
 \renewcommand{\thesubsection}{\normalfont\Roman{chapter}.\arabic{section}.\arabic{subsection}}
-\renewcommand{\theparagraph}{\alph{paragraph}.} 
+\renewcommand{\theparagraph}{\alph{paragraph}.}
 
 %\setcounter{secnumdepth}{5}            % number subsubsections
 %\setcounter{tocdepth}{5}               % and include them in the TOC
@@ -340,7 +340,7 @@
 
 % Useful commands
 \newcommand{\R}{\mathbf{R}}
-\renewcommand{\C}{\mathbf{C}}
+\newcommand{\C}{\mathbf{C}}
 \newcommand{\Q}{\mathbf{Q}}
 \newcommand{\Z}{\mathbf{Z}}
 \newcommand{\N}{\mathbf{N}}
@@ -372,16 +372,16 @@
 \definecolor{bgcode}{HTML}{282828}
 
 \newenvironment{python}{\VerbatimEnvironment\begin{minted}[
-    linenos, 
-    mathescape, 
-    bgcolor = bgcode, 
+    linenos,
+    mathescape,
+    bgcolor = bgcode,
     frame=lines,
     framesep=2mm
 ]{python}}{\end{minted}}
 \newenvironment{cpp}{\VerbatimEnvironment\begin{minted}[
-    linenos, 
-    mathescape, 
-    bgcolor = bgcode, 
+    linenos,
+    mathescape,
+    bgcolor = bgcode,
     frame=lines,
     framesep=2mm
 ]{cpp}}{\end{minted}}
@@ -467,7 +467,7 @@
 }
 
 \newcommand{\MakeMultEnv}[4]{
-    
+
     \DefaultFrameMult{#1}{#2}
 
     \theoremstyle{#3}
@@ -525,7 +525,7 @@
         %\definecolor{codestr}{HTML}{#11}
         %\definecolor{codenum}{HTML}{222222}
 
-	    % Syntax : \MakeThEnv{color}{env-name}{theorem-style}{title} 
+	    % Syntax : \MakeThEnv{color}{env-name}{theorem-style}{title}
 	    \MakeThEnv{th}{theo}{plain}{Théorème}
         \MakeThEnvStar{th}{theo}{plain}{Théorème}
 	    \MakeThEnv{defini}{defin}{definition}{Définition}
@@ -544,11 +544,11 @@
 
 % Option commands in "options.sty" file
 
-\input{ceri/sty/options.sty}
+\input{../ceri/sty/options.sty}
 % ----------------------
 
 % ----------------------
 % FINISH
 \ExecuteOptions{grape} % Default color palette
-\ProcessOptions\relax
+% \ProcessOptions\relax
 % ----------------------

@@ -1,0 +1,86 @@
+\documentclass[ikea]{../ceri/sty/MasterArticle}
+
+\title{Expression des $\zeta(2k)$}
+\author{Jean \textsc{Martin}}
+\date{}
+
+\input{../ceri/macro.tex}
+
+\begin{document}
+\maketitle
+
+On rappelle que l'\textbf{exponentielle complexe} est la fonction entière définie par
+\[ \forall z\in\C,\ \e^z\defeq\sum_{n=0}^{+\infty}\frac{z^n}{n!}. \]
+
+\begin{theo*}[{\autocite[305]{book:FGNAn2}}]
+    Soit $f\colon z\in\C^*\mapsto\dfrac{z}{\e^z-1}$. Alors $f$ est développable en série entière en $0$, et on a
+    \[ \forall z\in D(0,2\pi),\ f(z) = 1 - \frac z2 + 2\sum_{k=1}^{+\infty}\frac{(-1)^{k-1}}{(2\pi)^{2k}}\Big(\sum_{n=1}^{+\infty}\frac 1{n^{2k}}\Big)z^{2k}\text. \]
+\end{theo*}
+
+\begin{demo}
+    Soit $z\in\C\setminus 2\i\pi\Z$. Pour montrer ce théorème, on va utiliser le développement en série de \textsc{Fourier} de la fonction $\varphi\colon x\in\intoo{-\pi}\pi\mapsto\exp\left( \dfrac{zx}{2\pi} \right)$. On vérifie aisément que c'est une fonction continue par morceaux sur $\R$. On peut donc calculer ses coefficients de \textsc{Fourier}. On calcule, pour $n\in\Z^*$ :
+    \begin{align*}
+        c_n(\varphi) & = \frac 1{2\pi}\int_{-\pi}^\pi\varphi(x)\e^{-\i nx}\d x = \frac 1{2\pi}\int_{-\pi}^{\pi}\exp\left( \left( \frac z{2\pi}-\i n \right)x \right)\d x                           \\
+                     & = \frac 1{2\pi}\frac 1{(z/2\pi)-\i n}\left[ \e^{\frac{zx}{2\pi}}\e^{-\i nx} \right]_{-\pi}^\pi = \frac{(-1)^n\left( \e^{\frac z2}-\e^{-\frac z2} \right)}{z-2\pi\i n}\text.
+    \end{align*}
+    De plus, $\varphi$ est de classe $\mathscr C^1$ par morceaux sur $\R$. Donc par le théorème de \textsc{Dirichlet}, la série de \textsc{Fourier} de $\varphi$ converge en tout point $x$ de $\R$ :
+    \[ \frac 12\left( \varphi(x^+)+\varphi(x^-) \right) = \sum_{n\in\Z}c_n(\varphi)\e^{\i nx} = \left( \e^{\frac z2}-\e^{-\frac z2} \right)\sum_{n\in\Z}\frac{(-1)^n\e^{\i nx}}{z-2\pi\i n}\text. \]
+    Appliquons ce résultat à $x=\pi$ pour faire apparaître $f$ : $\dfrac 12\left( \varphi(\pi^+)+\varphi(\pi^-) \right) = \dfrac 12\left( \e^{\frac z2}+\e^{-\frac z2} \right)$, et donc
+    \[ \frac 12\left( \e^{\frac z2}+\e^{-\frac z2} \right) = \left( \e^{\frac z2}-\e^{-\frac z2} \right)\sum_{n\in\Z}\frac{(-1)^{2n}}{z-2\i\pi n} = \left( \e^{\frac z2}-\e^{-\frac z2} \right)\sum_{n\in\Z}\frac{z+2\i\pi n}{z^2+4\pi^2n^2}\text. \]
+    Or, on peut regrouper les termes de la série en $n$ et $-n$ :
+    \[ \sum_{n\in\Z}\frac{z+2\i\pi n}{z^2+4\pi^2n^2} = \frac 1z + \sum_{n=1}^{+\infty}\frac{z+2\i\pi n}{z^2+4\pi^2n^2} + \sum_{n=1}^{+\infty}\frac{z-2\i\pi n}{z^2+4\pi^2n^2} = \frac 1z + 2\sum_{k=1}^{+\infty}\frac z{z^2+4\pi^2n^2}\text. \]
+    Il vient donc :
+    \[ \frac{\e^{\frac z2}+\e^{-\frac z2}}{2\left( \e^{\frac z2}-\e^{-\frac z2} \right)} = \sum_{n\in\Z}\frac{z+2\i\pi n}{z^2+4\pi^2n^2} = \frac 1z + 2\sum_{k=1}^{+\infty}\frac z{z^2+4\pi^2n^2}\text. \]
+    D'autre part, on écrit, en factorisant par $\e^{-\frac z2}$,
+    \[ \frac{\e^{\frac z2}+\e^{-\frac z2}}{2\left( \e^{\frac z2}-\e^{-\frac z2} \right)} = \frac{\e^z+1}{2(\e^z-1)} = \frac{\e^z-1+2}{2(\e^z-1)} = \frac 12 + \frac 1{\e^z-1}\text. \]
+    Donc en multipliant par $z$ et en soustrayant $\dfrac z2$, on obtient finalement :
+    \begin{equation*}
+        \forall z\in\C\setminus 2\i\pi\Z,\ f(z) = 1 - \frac z2 + 2\sum_{k=1}^{+\infty}\frac {z^2}{z^2+4\pi^2n^2}\text.\label{eq:1}
+    \end{equation*}
+    Reste à développement cette somme en série entière. Pour cela, on va développer en série entière la quantité $\dfrac{z^2}{z^2+4\pi^2n^2}$. On a, si $\abs z<2\pi$, $\abs{\dfrac z{2\pi n}}<1$ pour tout $n\in\N^*$. D'où
+    \begin{align*}
+        \frac{z^2}{z^2+4\pi^2n^2} & = \frac{z^2}{4\pi^2n^2}\frac{1}{1+\dfrac{z^2}{4\pi^2n^2}} = \frac{z^2}{4\pi^2n^2}\sum_{k=0}^{+\infty}(-1)^k\frac{z^{2k}}{(4\pi^2n^2)^k} \\
+                                  & = \sum_{k=0}^{+\infty}(-1)^k\frac{z^{2(k+1)}}{(4\pi^2n^2)^{k+1}} = \sum_{k=1}^{+\infty}(-1)^{k-1}\frac{z^{2k}}{(2\pi n)^{2k}}\text.
+    \end{align*}
+    Notons à présent, pour tout $(n,k)\in(\N^*)^2$, $u_{n,k}\defeq(-1)^{k-1}\dfrac{z^{2k}}{(2\pi n)^{2k}}$. On va montrer que la série double $\sum\sum u_{n,k}$ converge. Pour tout $n\in\N^*$, la série $\displaystyle\sum_k\abs{u_{n,k}}$ converge par hypothèse sur $z$ (série géométrique). De plus, on a
+    \[ \forall n\in\N^*,\ \sum_{k=1}^{+\infty}\abs{u_{n,k}} = \frac{\abs z^2}{4\pi^2n^2}\sum_{k=0}^{+\infty}\abs{u_{n,k}} = \frac{\abs z^2}{4\pi^2n^2}\frac 1{1-\dfrac{\abs z^2}{4\pi^2n^2}} = \frac{\abs z^2}{4\pi^2n^2-\abs z^2}\text. \]
+    Et par les séries de \textsc{Riemann}, la série $\displaystyle\sum_n\frac{\abs z^2}{4\pi^2n^2-\abs z^2}$ converge. Ainsi, $\displaystyle\sum_n\sum_k \abs{u_{n,k}}$ converge, donc par le théorème de \textsc{Fubini-Lebesgue}, on peut échanger l'ordre de sommation, d'où l'on obtient, pour tout $z\in\C^*$ tel que $\abs z<2\pi$ :
+    \begin{align*}
+        f(z) & = 1 -\frac z2 + 2\sum_{n=1}^{+\infty}\sum_{k=1}^{+\infty}u_{n,k} = 1 -\frac z2 + 2\sum_{k=1}^{+\infty}\sum_{n=1}^{+\infty}u_{n,k} \\
+             & = 1 - \frac z2 + 2\sum_{k=1}^{+\infty}\frac{(-1)^{k-1}}{(2\pi)^{2k}}\Big(\sum_{n=1}^{+\infty}\frac 1{n^{2k}}\Big)z^{2k}\text.
+    \end{align*}
+    On vérifie aisément que $f$ admet un prolongement par continuité en $0$ défini par $f(0)=1$, et que cette égalité est vérifiée pour $z=0$. On obtient donc
+    \[ \forall z\in D(0,2\pi),\ f(z) = 1 - \frac z2 + 2\sum_{k=1}^{+\infty}\frac{(-1)^{k-1}}{(2\pi)^{2k}}\Big(\sum_{n=1}^{+\infty}\frac 1{n^{2k}}\Big)z^{2k}\text. \]
+\end{demo}
+
+On note $(b_n)_{n\in\N}$, qu'on appelle la suite des \textbf{nombres de \textsc{Bernoulli}}, les réels tels que
+\[ \forall z\in D(0,2\pi),\ f(z) = \sum_{n=0}^{+\infty}\frac{b_n}{n!}z^n\text. \]
+On a ainsi $b_0=1$, $b_1=-\dfrac 12$ et $b_{2n+1}=0$ pour tout $n\in\N^*$.
+
+\textbf{Application.}
+\[ \forall k\in\N^*,\ \sum_{n=1}^{+\infty}\frac 1{n^{2k}} = (-1)^{k-1}\frac{(2\pi)^{2k}}{2(2n)!}b_{2n}\text. \]
+
+\begin{demo}
+    En effet, par unicité du développement en série entière, on a
+    \[ \forall k\in\N^*,\ \frac{b_{2k}}{(2k)!} = 2\frac{(-1)^{k-1}}{(2\pi)^{2k}}\sum_{n=1}^{+\infty}\frac 1{n^{2k}}\text, \]
+    d'où
+    \[ \forall k\in\N^*,\ \sum_{n=1}^{+\infty}\frac 1{n^{2k}} = (-1)^{k-1}\frac{(2\pi)^{2k}}{2(2k)!}b_{2k}\text. \]
+\end{demo}
+
+Soit $z\in D(0,2\pi)$. Alors on a, par un produit de \textsc{Cauchy} :
+\begin{align*}
+    z = f(z)(\e^z-1) & = \Big( \sum_{n=0}^{+\infty}\frac{b_n}{n!}z^n \Big)\Big(\sum_{k=1}^{+\infty}\frac{z^k}{n!}\Big) \\
+                     & = \sum_{n=0}^{+\infty}\sum_{k=0}^{n-1}\frac{b_k}{k!}z^k\frac{z^{n-k}}{(n-k)!}                   \\
+                     & = \sum_{n=0}^{+\infty}\sum_{k=0}^{n-1}\frac{b_k}{k!(n-k)!}z^n\text.
+\end{align*}
+On a donc, pour tout $n\in\N\setminus\{0,1\}$,
+\[ \sum_{k=0}^{n-1}\frac{b_k}{k!(n-k)!} = 0\text, \]
+ce qui veut dire, en multipliant par $n!$,
+\[ \sum_{k=0}^{n-1}\binom nk b_k = 0\text. \]
+En réarrangeant, on obtient
+\[ b_{n-1} = -\frac 1{\binom n{n-1}}\sum_{k=2}^n\binom nk b_k =  -\frac 1{n}\sum_{k=2}^n\binom nk b_k\text. \]
+On a donc une relation de récurrence pour calculer les $b_n$. En particulier, on trouve que $b_2 = \dfrac 16$, $b_4=-\dfrac 1{30}$ et $b_6=\dfrac 1{42}$. D'où
+\[ \sum_{n=1}^{+\infty}\frac 1{n^{2}} = \frac{\pi^2}6,\quad\sum_{n=1}^{+\infty}\frac 1{n^{4}} = \frac{\pi^4}{90},\quad\sum_{n=1}^{+\infty}\frac 1{n^{6}} = \frac{\pi^6}{945}\text.  \]
+
+\printbibliography
+\end{document}
